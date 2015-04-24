@@ -122,7 +122,7 @@ module app.services {
 
         private overrideCacheItem(key: string, stringValue: string, storageType: StorageType) {
             var itemExist = this.retrieve(key, storageType);
-            if (angular.isUndefined(itemExist)) return true;
+            if (angular.isUndefined(itemExist) || itemExist === null) return true;
             if (this.options.useCompression) itemExist = LZString.decompressFromBase64(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
