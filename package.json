@@ -1,0 +1,43 @@
+{
+  "name": "Intergen.ClientCache",
+  "version": "0.0.0",
+  "description": "Client side cache with compression in angular",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gulp": "^3.8.11",
+    "gulp-typescript": "^2.6.0"
+  },
+  "devDependencies": { 
+    "gulp": "^3.8.11", 
+    "gulp-debug": "^2.0.1", 
+    "gulp-inject": "^1.2.0", 
+    "gulp-sourcemaps": "^1.5.1", 
+    "gulp-tslint": "^1.4.4", 
+    "gulp-typescript": "^2.5.0", 
+    "gulp-rimraf": "^0.1.1" 
+	},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonocairns/Intergen.ClientCache.git"
+  },
+  "keywords": [
+    "cache",
+    "localStorage",
+    "sessionStorage",
+    "browser",
+    "storage",
+    "compression"
+  ],
+  "author": "Jonathan Cairns",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonocairns/Intergen.ClientCache/issues"
+  },
+  "homepage": "https://github.com/jonocairns/Intergen.ClientCache"
+}
