@@ -1,0 +1,1 @@
+{"version":3,"sources":["module.ts"],"names":[],"mappings":"AAAA,YAAY,CAAC;AACb,IAAI,GAAG,GAAG,OAAO,CAAC,MAAM,CAAC,iBAAiB,EAAE,EAAE,CAAC,CAAC","file":"module.js","sourceRoot":"D:/DEV/Intergen.ClientCache/Intergen.ClientCache/","sourcesContent":["'use strict';\r\nvar app = angular.module('IntergenStorage', []);"]}

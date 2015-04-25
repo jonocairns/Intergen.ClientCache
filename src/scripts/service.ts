@@ -1,7 +1,7 @@
 /* tslint:disable:no-bitwise */
 'use strict';
 
-module app.services {
+module StorageService {
     export interface IIntergenStorageService {
         set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
         get<T>(key: string, storageType?: StorageType): T;
@@ -189,6 +189,6 @@ module app.services {
     ];
 
     angular
-        .module('app.services')
-        .factory('app.services.IntergenStorageService', factory);
+        .module('IntergenStorage')
+        .factory('IntergenStorageService', factory);
 }

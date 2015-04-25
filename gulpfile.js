@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     tslint = require('gulp-tslint'),
     sourcemaps = require('gulp-sourcemaps'),
     rimraf = require('gulp-rimraf'),
-    Config = require('./gulpfile.config');
+    Config = require('./gulpfile.config'),
+	karma = require('gulp-karma');
 
 var config = new Config();
 
@@ -69,8 +70,20 @@ gulp.task('clean-ts', function () {
       .pipe(rimraf());
 });
 
-gulp.task('watch', function() {
-    gulp.watch([config.allTypeScript], ['ts-lint', 'compile-ts', 'gen-ts-refs']);
+gulp.task('test', function() {
+   return gulp.src('./idontexist')
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'run'
+    }))
+    .on('error', function(err) {
+      throw err;
+    });
 });
 
-gulp.task('default', ['ts-lint', 'compile-ts', 'gen-ts-refs', 'watch']);
+gulp.task('watch', function() {
+    gulp.watch([config.allTypeScript], ['ts-lint', 'compile-ts', 'gen-ts-refs', 'test']);
+    gulp.watch([config.testFiles], ['test']);
+});
+
+gulp.task('default', ['ts-lint', 'compile-ts', 'gen-ts-refs', 'test', 'watch']);
