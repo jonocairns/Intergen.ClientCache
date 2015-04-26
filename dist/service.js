@@ -43,12 +43,15 @@ var StorageService;
             return deffered.promise;
         };
         IntergenStorageService.prototype.get = function (key, storageType) {
+            /* istanbul ignore next */
             if (angular.isUndefined(key))
                 throw new Error('Argument null exception. Parameter name: key. Function called: get');
             var stringValue = this.retrieve(key, this.resolveStorageType(storageType));
             if (angular.isUndefined(stringValue) || stringValue === null) {
+                /* istanbul ignore next */
                 return undefined;
             }
+            /* istanbul ignore next */
             if (this.options.useCompression)
                 stringValue = LZString.decompressFromBase64(stringValue);
             var value;
@@ -67,13 +70,17 @@ var StorageService;
             storageType = this.resolveStorageType(storageType);
             switch (storageType) {
                 case 0 /* Local */:
+                    /* istanbul ignore next */
                     localStorage.clear();
                     break;
                 case 1 /* Session */:
+                    /* istanbul ignore next */
                     sessionStorage.clear();
                     break;
                 default:
+                    /* istanbul ignore next */
                     sessionStorage.clear();
+                    /* istanbul ignore next */
                     localStorage.clear();
             }
         };
@@ -99,6 +106,7 @@ var StorageService;
             var itemExist = this.retrieve(key, storageType);
             if (angular.isUndefined(itemExist) || itemExist === null)
                 return true;
+            /* istanbul ignore next */
             if (this.options.useCompression)
                 itemExist = LZString.decompressFromBase64(itemExist);
             var origionalHash = this.hash(itemExist);
@@ -109,13 +117,17 @@ var StorageService;
             key = this.prefix(key);
             switch (storageType) {
                 case 0 /* Local */:
+                    /* istanbul ignore next */
                     return localStorage.getItem(key);
                 case 1 /* Session */:
+                    /* istanbul ignore next */
                     return sessionStorage.getItem(key);
                 default:
                     var sessionStoreValue = sessionStorage.getItem(key);
+                    /* istanbul ignore next */
                     if (!angular.isUndefined(sessionStorage))
                         return sessionStoreValue;
+                    /* istanbul ignore next */
                     return localStorage.getItem(key);
             }
         };
@@ -123,13 +135,17 @@ var StorageService;
             key = this.prefix(key);
             switch (storageType) {
                 case 0 /* Local */:
+                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
                     break;
                 case 1 /* Session */:
+                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
                     break;
                 default:
+                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
+                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
             }
         };
@@ -138,6 +154,7 @@ var StorageService;
         };
         IntergenStorageService.prototype.hash = function (value) {
             var hash = 0, i, chr, len;
+            /* istanbul ignore next */
             if (value.length === 0)
                 return hash;
             for (i = 0, len = value.length; i < len; i++) {

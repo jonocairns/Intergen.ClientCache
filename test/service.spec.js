@@ -173,63 +173,66 @@ describe('Storage Service test: ', function() {
 
 	it('should remove value from session storage only', function() {
 		var value = 's';
+		spyOn(window.sessionStorage, 'removeItem').and.callThrough();
+
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 1);
 			expect(sessionStorage.getItem('intergen.item')).toBe(null);
 			expect(localStorage.getItem('intergen.item')).toBe(value);
+			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
 		});
 		$timeout.flush();
 	});
 
 	it('should remove value from local storage only', function() {
 		var value = 's';
+		spyOn(window.localStorage, 'removeItem').and.callThrough();
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 0);
 			expect(sessionStorage.getItem('intergen.item')).toBe(value);
 			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(window.localStorage.removeItem).toHaveBeenCalled();
 		});
 		$timeout.flush();
 	});
 
 	it('should remove value from local and session storage', function() {
 		var value = 's';
+		spyOn(window.localStorage, 'removeItem').and.callThrough();
+		spyOn(window.sessionStorage, 'removeItem').and.callThrough();
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 2);
 			expect(sessionStorage.getItem('intergen.item')).toBe(null);
 			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(window.localStorage.removeItem).toHaveBeenCalled();
+			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
 		});
 		$timeout.flush();
 	});
 
 	it('should clear local and session storage', function() {
 		var value = 's';
+		spyOn(window.localStorage, 'clear').and.callThrough();
+		spyOn(window.sessionStorage, 'clear').and.callThrough();
+		spyOn(storage, 'removeAll').and.callThrough();
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.removeAll(2);
 			expect(sessionStorage.getItem('intergen.item')).toBe(null);
 			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(window.localStorage.clear).toHaveBeenCalled();
+			expect(window.sessionStorage.clear).toHaveBeenCalled();
+			expect(storage.removeAll).toHaveBeenCalled();
 		});
 		$timeout.flush();
-	});
-
-	it('should clear local and session storage', function() {
-		var value = 's';
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-		});
-		$timeout.flush();
-		storage.set('anotherItem', value).then(function() {
-			storage.removeAll(2);
-			expect(sessionStorage.length).toBe(0);
-			expect(localStorage.length).toBe(0);
-		});
 	});
 
 	it('should clear session storage only', function() {
 		var value = 's';
+		spyOn(window.sessionStorage, 'clear').and.callThrough();
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 		});
@@ -238,11 +241,13 @@ describe('Storage Service test: ', function() {
 			storage.removeAll(1);
 			expect(sessionStorage.length).toBe(0);
 			expect(localStorage.length).toBe(2);
+			expect(window.sessionStorage.clear).toHaveBeenCalled();
 		});
 	});
 
 	it('should clear local storage only', function() {
 		var value = 's';
+		spyOn(window.localStorage, 'clear').and.callThrough();
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 		});
@@ -251,6 +256,7 @@ describe('Storage Service test: ', function() {
 			storage.removeAll(0);
 			expect(sessionStorage.length).toBe(2);
 			expect(localStorage.length).toBe(0);
+			expect(window.localStorage.clear).toHaveBeenCalled();
 		});
 	});
 });

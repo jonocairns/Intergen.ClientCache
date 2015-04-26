@@ -60,14 +60,17 @@ module StorageService {
         }
 
         public get<T>(key: string, storageType?: StorageType): T {
+            /* istanbul ignore next */
             if (angular.isUndefined(key)) throw new Error('Argument null exception. Parameter name: key. Function called: get');
 
             var stringValue = this.retrieve(key, this.resolveStorageType(storageType));
 
             if (angular.isUndefined(stringValue) || stringValue === null) {
+                /* istanbul ignore next */
                 return undefined;
             }
 
+            /* istanbul ignore next */
             if (this.options.useCompression) stringValue = LZString.decompressFromBase64(stringValue);
 
             var value;
@@ -89,13 +92,19 @@ module StorageService {
 
             switch (storageType) {
                 case StorageType.Local:
+                    /* istanbul ignore next */
                     localStorage.clear();
+                    /* istanbul ignore next */ 
                     break;
                 case StorageType.Session:
+                    /* istanbul ignore next */
                     sessionStorage.clear();
+                    /* istanbul ignore next */
                     break;
                 default:
+                    /* istanbul ignore next */
                     sessionStorage.clear();
+                    /* istanbul ignore next */
                     localStorage.clear();
             }
         }
@@ -106,9 +115,11 @@ module StorageService {
             switch (storageType) {
                 case StorageType.Local:
                     localStorage.removeItem(key);
+                    /* istanbul ignore next */
                     break;
                 case StorageType.Session:
                     sessionStorage.removeItem(key);
+                    /* istanbul ignore next */
                     break;
                 default:
                     sessionStorage.removeItem(key);
@@ -123,6 +134,7 @@ module StorageService {
         private overrideCacheItem(key: string, stringValue: string, storageType: StorageType) {
             var itemExist = this.retrieve(key, storageType);
             if (angular.isUndefined(itemExist) || itemExist === null) return true;
+            /* istanbul ignore next */
             if (this.options.useCompression) itemExist = LZString.decompressFromBase64(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
@@ -134,14 +146,18 @@ module StorageService {
 
             switch (storageType) {
                 case StorageType.Local:
+                    /* istanbul ignore next */
                     return localStorage.getItem(key);
 
                 case StorageType.Session:
+                    /* istanbul ignore next */
                     return sessionStorage.getItem(key);
 
                 default:
                     var sessionStoreValue = sessionStorage.getItem(key);
+                    /* istanbul ignore next */
                     if (!angular.isUndefined(sessionStorage)) return sessionStoreValue;
+                    /* istanbul ignore next */
                     return localStorage.getItem(key);
             }
         }
@@ -151,15 +167,20 @@ module StorageService {
 
             switch (storageType) {
                 case StorageType.Local:
+                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
+                    /* istanbul ignore next */
                     break;
-
                 case StorageType.Session:
+                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
+                    /* istanbul ignore next */
                     break;
 
                 default:
+                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
+                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
             }
         }
@@ -169,7 +190,8 @@ module StorageService {
         }
 
         private hash(value: string) {
-            var hash = 0, i, chr, len;
+            var hash = 0, i, chr, len; 
+            /* istanbul ignore next */
             if (value.length === 0) return hash;
             for (i = 0, len = value.length; i < len; i++) {
                 chr = value.charCodeAt(i);
