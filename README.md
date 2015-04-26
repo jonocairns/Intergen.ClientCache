@@ -6,7 +6,7 @@ Local storage and session storage wrapper for angular. Also has functionality to
 
 Tests run across the lastest versions of IE/Firefox/Chrome
 
-Uses http://caniuse.com/#search=localstorage
+Uses http://caniuse.com/#search=web%20storage
 
 Written in typescript
 
