@@ -25,6 +25,6 @@ Angular
 [npm-image]: https://img.shields.io/npm/v/angular-client-cache.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/angular-client-cache
 [license-image]: http://img.shields.io/npm/l/angular-client-cache.svg?style=flat-square
-[license-url]: LICENSE
+[license-url]: https://github.com/jonocairns/angular-client-cache/LICENSE
 [david-image]: http://img.shields.io/david/jonocairns/angular-client-cache.svg?style=flat-square
 [david-url]: https://david-dm.org/jonocairns/angular-client-cache
