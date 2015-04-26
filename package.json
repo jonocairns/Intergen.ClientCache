@@ -30,7 +30,7 @@
     "lz-string": "^1.4.1"
   },
   "scripts": {
-    "test": "test"
+    "test": "karma start karma.conf.js --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
