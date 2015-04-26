@@ -4,6 +4,11 @@ Local storage and session storage wrapper for angular. Also has functionality to
 
 Written in typescript
 
+Options: interface IStorageOptions {
+        storagePrefix?: string;
+        useCompression?: boolean;
+        storageType?: StorageType;
+    }
 
 Dependencies: 
 
