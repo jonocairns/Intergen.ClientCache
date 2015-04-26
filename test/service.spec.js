@@ -241,7 +241,7 @@ describe('Storage Service test: ', function() {
 		});
 	});
 
-	it('should clear session storage only', function() {
+	it('should clear local storage only', function() {
 		var value = 's';
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
