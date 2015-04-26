@@ -1,6 +1,6 @@
 # Intergen.ClientCache
 
-[![Build Status](https://travis-ci.org/jonocairns/Intergen.ClientCache.svg?branch=master)](https://travis-ci.org/jonocairns/Intergen.ClientCache) [![Code Climate](https://codeclimate.com/github/jonocairns/Intergen.ClientCache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/Intergen.ClientCache) [![Test Coverage](https://codeclimate.com/github/jonocairns/Intergen.ClientCache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/Intergen.ClientCache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url]
+[![Build Status](https://travis-ci.org/jonocairns/Intergen.ClientCache.svg?branch=master)](https://travis-ci.org/jonocairns/Intergen.ClientCache) [![Code Climate](https://codeclimate.com/github/jonocairns/Intergen.ClientCache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/Intergen.ClientCache) [![Test Coverage](https://codeclimate.com/github/jonocairns/Intergen.ClientCache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/Intergen.ClientCache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [!Dependancies][https://img.shields.io/gemnasium/jonocairns/intergen.clientcache.svg]]
 
 
 Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage.
