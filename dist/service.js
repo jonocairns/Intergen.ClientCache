@@ -36,7 +36,6 @@ var StorageService;
                     if (_this.options.useCompression) {
                         stringValue = LZString.compressToBase64(stringValue);
                     }
-                    ;
                     _this.store(key, stringValue, _this.resolveStorageType(storageType));
                 }
                 deffered.resolve();

@@ -51,7 +51,7 @@ module StorageService {
                 if (shouldOverride) {
                     if (this.options.useCompression) {
                         stringValue = LZString.compressToBase64(stringValue);
-                    };
+                    }
                     this.store(key, stringValue, this.resolveStorageType(storageType));
                 }
                 deffered.resolve();
