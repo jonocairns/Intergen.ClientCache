@@ -253,10 +253,4 @@ describe('Storage Service test: ', function() {
 			expect(localStorage.length).toBe(0);
 		});
 	});
-
-	it('shoudl increase coverage!', function() {
-		storage.retrieve('a', 0);
-		storage.retrieve('a', 1);
-		storage.retrieve('a', 2);
-	});
 });
