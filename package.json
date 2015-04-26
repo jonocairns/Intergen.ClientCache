@@ -1,6 +1,6 @@
 {
-  "name": "Intergen.ClientCache",
-  "version": "0.0.0",
+  "name": "angular-client-cache",
+  "version": "0.0.1",
   "description": "Client side cache with compression in angular",
   "main": "gulpfile.js",
   "directories": {
@@ -22,6 +22,7 @@
     "gulp-sourcemaps": "^1.5.1",
     "gulp-tslint": "^1.4.4",
     "gulp-typescript": "^2.5.0",
+    "gulp-uglifyjs": "^0.6.1",
     "jasmine-core": "^2.2.0",
     "jquery": "^2.1.3",
     "karma": "^0.12.31",
@@ -49,7 +50,7 @@
     "compression"
   ],
   "author": "Jonathan Cairns",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jonocairns/Intergen.ClientCache/issues"
   },

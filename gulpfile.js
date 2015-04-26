@@ -81,9 +81,17 @@ gulp.task('test', function() {
     });
 });
 
+var uglify = require('gulp-uglifyjs');
+ 
+gulp.task('uglify', function() {
+  gulp.src('dist/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/bin'))
+});
+
 gulp.task('watch', function() {
     gulp.watch([config.allTypeScript], ['ts-lint', 'compile-ts', 'gen-ts-refs', 'test']);
     gulp.watch([config.testFiles], ['test']);
 });
 
-gulp.task('default', ['ts-lint', 'compile-ts', 'gen-ts-refs', 'test', 'watch']);
+gulp.task('default', ['ts-lint', 'compile-ts', 'gen-ts-refs', 'test', 'uglify', 'watch']);
