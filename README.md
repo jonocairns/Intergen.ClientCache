@@ -1,6 +1,6 @@
 # angular-client-cache
 
-[![Build Status](https://travis-ci.org/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/Intergen.ClientCache) [![Code Climate](https://codeclimate.com/github/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/angular-client-cache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [![Dependency Status][david-image]][david-url]
+[![Build Status](https://travis-ci.org/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/angular-client-cache) [![Code Climate](https://codeclimate.com/github/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/angular-client-cache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [![Dependency Status][david-image]][david-url]
  
 
 Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage.
