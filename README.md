@@ -11,11 +11,38 @@ Uses http://caniuse.com/#search=web%20storage
 
 Written in typescript
 
+##Get Started
+
+**(1)** Grab the **npm** package
+```bash
+$ npm install lz-string angular-client-cache --save
+```
+**(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) directory in your `index.html`, after angular
+
+**(3)** Add `'ClientCache'` to your main module's list of dependencies.
+
+**(4)** Inject 'ClientCacheService' and use it!
+
+Usage info: 
+```javascript
+     set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
+     
+     get<T>(key: string, storageType?: StorageType): T;
+     
+     configure(options: IStorageOptions): void;
+     
+     remove(key: string, storageType?: StorageType): void;
+     
+     removeAll(storageType?: StorageType): void;
+``` 
+
+``` javascript
 Options: interface IStorageOptions {
         storagePrefix?: string;
-        useCompression?: boolean;
-        storageType?: StorageType;
+        useCompression?: boolean; // defaulted to false
+        storageType?: StorageType; // defaulted to BOTH session and local storage
     }
+```    
 
 Dependencies: 
 
