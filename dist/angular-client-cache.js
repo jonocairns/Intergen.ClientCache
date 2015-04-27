@@ -34,7 +34,7 @@ var ClientCache;
                 var shouldOverride = _this.overrideCacheItem(key, stringValue, _this.resolveStorageType(storageType));
                 if (shouldOverride) {
                     if (_this.options.useCompression) {
-                        stringValue = LZString.compressToBase64(stringValue);
+                        stringValue = LZString.compress(stringValue);
                     }
                     _this.store(key, stringValue, _this.resolveStorageType(storageType));
                 }
@@ -50,7 +50,7 @@ var ClientCache;
                 return undefined;
             }
             if (this.options.useCompression)
-                stringValue = LZString.decompressFromBase64(stringValue);
+                stringValue = LZString.decompress(stringValue);
             var value;
             try {
                 value = angular.fromJson(stringValue);
@@ -117,7 +117,7 @@ var ClientCache;
             if (angular.isUndefined(itemExist) || itemExist === null)
                 return true;
             if (this.options.useCompression)
-                itemExist = LZString.decompressFromBase64(itemExist);
+                itemExist = LZString.decompress(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
             return origionalHash !== newHash;

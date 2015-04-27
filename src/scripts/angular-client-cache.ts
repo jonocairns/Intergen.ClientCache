@@ -51,7 +51,7 @@ module ClientCache {
 
                 if (shouldOverride) {
                     if (this.options.useCompression) {
-                        stringValue = LZString.compressToBase64(stringValue);
+                        stringValue = LZString.compress(stringValue);
                     }
                     this.store(key, stringValue, this.resolveStorageType(storageType));
                 }
@@ -69,7 +69,7 @@ module ClientCache {
                 return undefined;
             }
 
-            if (this.options.useCompression) stringValue = LZString.decompressFromBase64(stringValue);
+            if (this.options.useCompression) stringValue = LZString.decompress(stringValue);
 
             var value;
             try {
@@ -141,7 +141,7 @@ module ClientCache {
         private overrideCacheItem(key: string, stringValue: string, storageType: StorageType) {
             var itemExist = this.retrieve(key, storageType);
             if (angular.isUndefined(itemExist) || itemExist === null) return true;
-            if (this.options.useCompression) itemExist = LZString.decompressFromBase64(itemExist);
+            if (this.options.useCompression) itemExist = LZString.decompress(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
             return origionalHash !== newHash;
