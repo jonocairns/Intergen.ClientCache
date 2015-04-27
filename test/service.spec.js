@@ -1,12 +1,14 @@
 'use strict';
 
 describe('Storage Service test: ', function() {
-	var storage, $timeout;
+	var storage, $timeout, $httpBackend, $http;
 	beforeEach(module('ClientCache'))
 
-	beforeEach(inject(function (_ClientCacheService_, _$timeout_) {
+	beforeEach(inject(function (_ClientCacheService_, _$timeout_, _$httpBackend_, _$http_) {
 		storage = _ClientCacheService_;
-		$timeout = _$timeout_
+		$timeout = _$timeout_;
+		$httpBackend = _$httpBackend_;
+		$http = _$http_;
 	}));
 
 	afterEach(function() {
@@ -21,6 +23,46 @@ describe('Storage Service test: ', function() {
 			var browserLocalStorage = localStorage.getItem('intergen.testKey');
 			expect(browserSessionStorage).toBe(valueToBeSet);
 			expect(browserLocalStorage).toBe(valueToBeSet);
+		});
+		$timeout.flush();
+	});
+
+	it('should perform the API call then set it to local and session storage', function() {
+		$httpBackend.when('GET','blah').respond({ t: 'blah'});
+		var apiCall = function() { return $http.get('blah'); }
+
+		storage.tryGetSet('key', apiCall).then(function() {
+			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
+			expect(localStorage.getItem('intergen.key')).toBeDefined();
+		});
+		$timeout.flush();
+	});
+
+	it('should perform the API call then set it to local and session storage and return a build object with a date', function() {
+		var date = new Date().toISOString();
+		$httpBackend.when('GET','blah').respond({ t: date});
+		var apiCall = function() { return $http.get('blah'); }
+		var builder = function(item) { return { t: new Date(item.t) } };
+
+		storage.tryGetSet('key', apiCall, builder).then(function(item) {
+			expect(item.t instanceof Date).toBeTruthy();
+			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
+			expect(localStorage.getItem('intergen.key')).toBeDefined();
+		});
+		$timeout.flush();
+	});
+
+	it('should pull from session storage and not perform API call', function() {
+		var callerService = { apiCall : function() { return $http.get('blah'); } };
+		spyOn(callerService, 'apiCall').and.callThrough();
+
+		storage.set('key', { t: 'as' })
+		$timeout.flush();
+
+		storage.tryGetSet('key', callerService.apiCall).then(function() {
+			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
+			expect(localStorage.getItem('intergen.key')).toBeDefined();
+			expect(callerService.apiCall).not.toHaveBeenCalled();
 		});
 		$timeout.flush();
 	});

@@ -60,6 +60,23 @@ var ClientCache;
             }
             return value;
         };
+        ClientCacheService.prototype.tryGetSet = function (key, apiCall, objectBuilder) {
+            var _this = this;
+            var deferred = this.$q.defer();
+            var value = this.get(key, 2 /* All */);
+            if (!angular.isUndefined(value) && value !== null) {
+                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
+                    value = objectBuilder(value);
+                deferred.resolve(value);
+                return deferred.promise;
+            }
+            return apiCall().then(function (response) {
+                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
+                    response = objectBuilder(response);
+                _this.set(key, response);
+                return response;
+            });
+        };
         ClientCacheService.prototype.configure = function (options) {
             angular.extend(this.options, options);
         };

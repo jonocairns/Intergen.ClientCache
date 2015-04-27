@@ -5,6 +5,7 @@ module ClientCache {
     export interface IClientCacheService {
         set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
         get<T>(key: string, storageType?: StorageType): T;
+        tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T>;
         configure(options: IStorageOptions): void;
         remove(key: string, storageType?: StorageType): void;
         removeAll(storageType?: StorageType): void;
@@ -78,6 +79,23 @@ module ClientCache {
             }
 
             return value;
+        }
+
+        public tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T> {
+            var deferred = this.$q.defer();
+
+            var value = this.get<T>(key, StorageType.All);
+            if(!angular.isUndefined(value) && value !== null) {
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) value = objectBuilder(value);
+                deferred.resolve(value);
+                return deferred.promise;
+            }
+
+            return apiCall().then((response: T) => {
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) response = objectBuilder(response);
+                this.set(key, response);
+                return response;
+            });
         }
 
         public configure(options: IStorageOptions) {
