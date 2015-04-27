@@ -2,10 +2,10 @@
 
 describe('Storage Service test: ', function() {
 	var storage, $timeout;
-	beforeEach(module('IntergenStorage'))
+	beforeEach(module('ClientCache'))
 
-	beforeEach(inject(function (_IntergenStorageService_, _$timeout_) {
-		storage = _IntergenStorageService_;
+	beforeEach(inject(function (_ClientCacheService_, _$timeout_) {
+		storage = _ClientCacheService_;
 		$timeout = _$timeout_
 	}));
 

@@ -1,8 +1,8 @@
 /* tslint:disable:no-bitwise */
 'use strict';
 
-module StorageService {
-    export interface IIntergenStorageService {
+module ClientCache {
+    export interface IClientCacheService {
         set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
         get<T>(key: string, storageType?: StorageType): T;
         configure(options: IStorageOptions): void;
@@ -22,7 +22,7 @@ module StorageService {
         All
     }
 
-    export class IntergenStorageService implements IIntergenStorageService {
+    export class ClientCacheService implements IClientCacheService {
 
         private options: IStorageOptions = {
             storagePrefix: 'intergen',
@@ -180,15 +180,17 @@ module StorageService {
         }
     }
 
-    function factory($q: ng.IQService, $timeout: ng.ITimeoutService): IIntergenStorageService {
-        return new IntergenStorageService($q, $timeout);
+    function factory($q: ng.IQService, $timeout: ng.ITimeoutService): IClientCacheService {
+        return new ClientCacheService($q, $timeout);
     }
     factory.$inject = [
         '$q',
         '$timeout'
     ];
 
+    angular.module('ClientCache', []);
+
     angular
-        .module('IntergenStorage')
-        .factory('IntergenStorageService', factory);
+        .module('ClientCache')
+        .factory('ClientCacheService', factory);
 }

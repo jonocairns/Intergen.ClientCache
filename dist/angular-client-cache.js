@@ -1,15 +1,15 @@
 /* tslint:disable:no-bitwise */
 'use strict';
-var StorageService;
-(function (StorageService) {
+var ClientCache;
+(function (ClientCache) {
     (function (StorageType) {
         StorageType[StorageType["Local"] = 0] = "Local";
         StorageType[StorageType["Session"] = 1] = "Session";
         StorageType[StorageType["All"] = 2] = "All";
-    })(StorageService.StorageType || (StorageService.StorageType = {}));
-    var StorageType = StorageService.StorageType;
-    var IntergenStorageService = (function () {
-        function IntergenStorageService($q, $timeout) {
+    })(ClientCache.StorageType || (ClientCache.StorageType = {}));
+    var StorageType = ClientCache.StorageType;
+    var ClientCacheService = (function () {
+        function ClientCacheService($q, $timeout) {
             this.$q = $q;
             this.$timeout = $timeout;
             this.options = {
@@ -18,7 +18,7 @@ var StorageService;
                 storageType: 2 /* All */
             };
         }
-        IntergenStorageService.prototype.set = function (key, value, storageType) {
+        ClientCacheService.prototype.set = function (key, value, storageType) {
             var _this = this;
             if (angular.isUndefined(key))
                 throw new Error('Argument null exception. Parameter name: key. Function called: set');
@@ -42,16 +42,13 @@ var StorageService;
             });
             return deffered.promise;
         };
-        IntergenStorageService.prototype.get = function (key, storageType) {
-            /* istanbul ignore next */
+        ClientCacheService.prototype.get = function (key, storageType) {
             if (angular.isUndefined(key))
                 throw new Error('Argument null exception. Parameter name: key. Function called: get');
             var stringValue = this.retrieve(key, this.resolveStorageType(storageType));
             if (angular.isUndefined(stringValue) || stringValue === null) {
-                /* istanbul ignore next */
                 return undefined;
             }
-            /* istanbul ignore next */
             if (this.options.useCompression)
                 stringValue = LZString.decompressFromBase64(stringValue);
             var value;
@@ -63,28 +60,24 @@ var StorageService;
             }
             return value;
         };
-        IntergenStorageService.prototype.configure = function (options) {
+        ClientCacheService.prototype.configure = function (options) {
             angular.extend(this.options, options);
         };
-        IntergenStorageService.prototype.removeAll = function (storageType) {
+        ClientCacheService.prototype.removeAll = function (storageType) {
             storageType = this.resolveStorageType(storageType);
             switch (storageType) {
                 case 0 /* Local */:
-                    /* istanbul ignore next */
                     localStorage.clear();
                     break;
                 case 1 /* Session */:
-                    /* istanbul ignore next */
                     sessionStorage.clear();
                     break;
                 default:
-                    /* istanbul ignore next */
                     sessionStorage.clear();
-                    /* istanbul ignore next */
                     localStorage.clear();
             }
         };
-        IntergenStorageService.prototype.remove = function (key, storageType) {
+        ClientCacheService.prototype.remove = function (key, storageType) {
             key = this.prefix(key);
             storageType = this.resolveStorageType(storageType);
             switch (storageType) {
@@ -99,62 +92,52 @@ var StorageService;
                     localStorage.removeItem(key);
             }
         };
-        IntergenStorageService.prototype.resolveStorageType = function (storageType) {
+        ClientCacheService.prototype.resolveStorageType = function (storageType) {
             return angular.isUndefined(storageType) ? this.options.storageType : storageType;
         };
-        IntergenStorageService.prototype.overrideCacheItem = function (key, stringValue, storageType) {
+        ClientCacheService.prototype.overrideCacheItem = function (key, stringValue, storageType) {
             var itemExist = this.retrieve(key, storageType);
             if (angular.isUndefined(itemExist) || itemExist === null)
                 return true;
-            /* istanbul ignore next */
             if (this.options.useCompression)
                 itemExist = LZString.decompressFromBase64(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
             return origionalHash !== newHash;
         };
-        IntergenStorageService.prototype.retrieve = function (key, storageType) {
+        ClientCacheService.prototype.retrieve = function (key, storageType) {
             key = this.prefix(key);
             switch (storageType) {
                 case 0 /* Local */:
-                    /* istanbul ignore next */
                     return localStorage.getItem(key);
                 case 1 /* Session */:
-                    /* istanbul ignore next */
                     return sessionStorage.getItem(key);
                 default:
                     var sessionStoreValue = sessionStorage.getItem(key);
-                    /* istanbul ignore next */
                     if (!angular.isUndefined(sessionStorage))
                         return sessionStoreValue;
-                    /* istanbul ignore next */
                     return localStorage.getItem(key);
             }
         };
-        IntergenStorageService.prototype.store = function (key, value, storageType) {
+        ClientCacheService.prototype.store = function (key, value, storageType) {
             key = this.prefix(key);
             switch (storageType) {
                 case 0 /* Local */:
-                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
                     break;
                 case 1 /* Session */:
-                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
                     break;
                 default:
-                    /* istanbul ignore next */
                     localStorage.setItem(key, value);
-                    /* istanbul ignore next */
                     sessionStorage.setItem(key, value);
             }
         };
-        IntergenStorageService.prototype.prefix = function (key) {
+        ClientCacheService.prototype.prefix = function (key) {
             return this.options.storagePrefix + '.' + key;
         };
-        IntergenStorageService.prototype.hash = function (value) {
+        ClientCacheService.prototype.hash = function (value) {
             var hash = 0, i, chr, len;
-            /* istanbul ignore next */
             if (value.length === 0)
                 return hash;
             for (i = 0, len = value.length; i < len; i++) {
@@ -164,17 +147,18 @@ var StorageService;
             }
             return hash;
         };
-        return IntergenStorageService;
+        return ClientCacheService;
     })();
-    StorageService.IntergenStorageService = IntergenStorageService;
+    ClientCache.ClientCacheService = ClientCacheService;
     function factory($q, $timeout) {
-        return new IntergenStorageService($q, $timeout);
+        return new ClientCacheService($q, $timeout);
     }
     factory.$inject = [
         '$q',
         '$timeout'
     ];
-    angular.module('IntergenStorage').factory('IntergenStorageService', factory);
-})(StorageService || (StorageService = {}));
+    angular.module('ClientCache', []);
+    angular.module('ClientCache').factory('ClientCacheService', factory);
+})(ClientCache || (ClientCache = {}));
 
-//# sourceMappingURL=service.js.map
+//# sourceMappingURL=angular-client-cache.js.map
