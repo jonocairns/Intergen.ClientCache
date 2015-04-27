@@ -1,6 +1,6 @@
 # angular-client-cache
 
-[![Build Status](https://travis-ci.org/jonocairns/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/angular-client-cache) [![Code Climate](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [![Dependency Status][david-image]][david-url]
+[![Build Status](https://travis-ci.org/jonocairns/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/angular-client-cache) [![Code Climate](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![NPM version](https://img.shields.io/npm/v/angular-client-cache.svg?style=flat-square)](https://npmjs.org/package/angular-client-cache) [![License](http://img.shields.io/npm/l/angular-client-cache.svg?style=flat-square)](LICENSE) [![Dependency Status](http://img.shields.io/david/jonocairns/angular-client-cache.svg?style=flat-square)](https://david-dm.org/jonocairns/angular-client-cache)
  
 
 Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage. 
@@ -102,10 +102,3 @@ Dependencies:
 
 LZ-string (https://github.com/pieroxy/lz-string/),
 Angular
-
-[npm-image]: https://img.shields.io/npm/v/angular-client-cache.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/angular-client-cache
-[license-image]: http://img.shields.io/npm/l/angular-client-cache.svg?style=flat-square
-[license-url]: LICENSE
-[david-image]: http://img.shields.io/david/jonocairns/angular-client-cache.svg?style=flat-square
-[david-url]: https://david-dm.org/jonocairns/angular-client-cache
