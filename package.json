@@ -1,6 +1,6 @@
 {
   "name": "angular-client-cache",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Client side cache with compression in angular",
   "main": "gulpfile.js",
   "directories": {
