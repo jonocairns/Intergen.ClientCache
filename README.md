@@ -19,7 +19,7 @@ Written in typescript
 ```bash
 $ npm install lz-string angular-client-cache --save
 ```
-**(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) directory in your `index.html`, after angular
+**(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) and `lz-string.js` in your `index.html` after angular.
 
 **(3)** Add `'ClientCache'` to your main module's list of dependencies.
 
