@@ -60,7 +60,7 @@ Example usages:
     
     clientCache.get('key', StorageType.Local);
     
-    // tryGetSet
+    // tryGetSet - this will attempt to get the value from local/session storage, if the value doesn't exist it will perform the API call you supply - then set that response in local/session storage. You can optionally add a builder to build the object from the response.
     
     clientCache.tryGetSet('key', $http.get('/api/blah'));
     
