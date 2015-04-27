@@ -3,7 +3,9 @@
 [![Build Status](https://travis-ci.org/jonocairns/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/angular-client-cache) [![Code Climate](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [![Dependency Status][david-image]][david-url]
  
 
-Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage.
+Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage. 
+
+Assists with the issue of low (2.5-10MB~) storage limits. Example case - had 5.12MB of localStorage data - this was compressed to 500kb.
 
 Tests run across the lastest versions of IE/Firefox/Chrome
 
@@ -17,7 +19,7 @@ Written in typescript
 ```bash
 $ npm install lz-string angular-client-cache --save
 ```
-**(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) directory in your `index.html`, after angular
+**(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) and `lz-string.js` in your `index.html` after angular.
 
 **(3)** Add `'ClientCache'` to your main module's list of dependencies.
 
