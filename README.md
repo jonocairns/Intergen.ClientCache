@@ -40,6 +40,56 @@ Usage info:
      removeAll(storageType?: StorageType): void;
 ``` 
 
+Example usages:
+(note: the enum StorageType can only be used if you are using typescript - the values for pure js are Local - 0, Session - 1 and All - 2)
+````javascript    
+    //set:
+    
+    var value = 'storeMePlz';
+    clientCache.set('key', value);
+    
+    // or 
+    
+    clientCache.set('key', value, StorageType.Session);
+    
+    //get:
+    
+    clientCache.get('key');
+    
+    // or
+    
+    clientCache.get('key', StorageType.Local);
+    
+    // tryGetSet - this will attempt to get the value from local/session storage, if the value doesn't exist it will perform the API call you supply - then set that response in local/session storage. You can optionally add a builder to build the object from the response.
+    
+    clientCache.tryGetSet('key', $http.get('/api/blah'));
+    
+    // or
+    
+    var builder = function(itemToBuild) { return { something: new Date(itemToBuild.date); }};
+    clientCache.tryGetSet('key', $http.get('/api/blah'), builder);
+    
+    // configure
+    
+    clientCache.configure({ useCompression: true });
+    
+    // remove
+    
+    clientCache.remove('key');
+    
+    // or
+    
+    clientCache.remove('key', StorageType.All);
+    
+    // removeAll
+    
+    clientCache.removeAll();
+    
+    // or 
+    
+    clientCache.removeAll(StorageType.Session);
+```
+
 ``` javascript
 Options: interface IStorageOptions {
         storagePrefix?: string;
