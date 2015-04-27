@@ -31,6 +31,8 @@ Usage info:
      
      get<T>(key: string, storageType?: StorageType): T;
      
+     tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T>;
+     
      configure(options: IStorageOptions): void;
      
      remove(key: string, storageType?: StorageType): void;
