@@ -13,7 +13,7 @@ var ClientCache;
             this.$q = $q;
             this.$timeout = $timeout;
             this.options = {
-                storagePrefix: 'intergen',
+                storagePrefix: 'angular-cache',
                 useCompression: false,
                 storageType: 2 /* All */
             };

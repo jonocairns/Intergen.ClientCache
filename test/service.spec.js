@@ -19,8 +19,8 @@ describe('Storage Service test: ', function() {
 	it('should be able to set in local and session storage', function() {
 		var valueToBeSet = 'hello'
 		storage.set('testKey', valueToBeSet).then(function() {
-			var browserSessionStorage = sessionStorage.getItem('intergen.testKey');
-			var browserLocalStorage = localStorage.getItem('intergen.testKey');
+			var browserSessionStorage = sessionStorage.getItem('angular-cache.testKey');
+			var browserLocalStorage = localStorage.getItem('angular-cache.testKey');
 			expect(browserSessionStorage).toBe(valueToBeSet);
 			expect(browserLocalStorage).toBe(valueToBeSet);
 		});
@@ -32,8 +32,8 @@ describe('Storage Service test: ', function() {
 		var apiCall = function() { return $http.get('blah'); }
 
 		storage.tryGetSet('key', apiCall).then(function() {
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
-			expect(localStorage.getItem('intergen.key')).toBeDefined();
+			expect(sessionStorage.getItem('angular-cache.key')).toBeDefined();
+			expect(localStorage.getItem('angular-cache.key')).toBeDefined();
 		});
 		$timeout.flush();
 	});
@@ -46,8 +46,8 @@ describe('Storage Service test: ', function() {
 
 		storage.tryGetSet('key', apiCall, builder).then(function(item) {
 			expect(item.t instanceof Date).toBeTruthy();
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
-			expect(localStorage.getItem('intergen.key')).toBeDefined();
+			expect(sessionStorage.getItem('angular-cache.key')).toBeDefined();
+			expect(localStorage.getItem('angular-cache.key')).toBeDefined();
 		});
 		$timeout.flush();
 	});
@@ -60,8 +60,8 @@ describe('Storage Service test: ', function() {
 		$timeout.flush();
 
 		storage.tryGetSet('key', callerService.apiCall).then(function() {
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
-			expect(localStorage.getItem('intergen.key')).toBeDefined();
+			expect(sessionStorage.getItem('angular-cache.key')).toBeDefined();
+			expect(localStorage.getItem('angular-cache.key')).toBeDefined();
 			expect(callerService.apiCall).not.toHaveBeenCalled();
 		});
 		$timeout.flush();
@@ -79,7 +79,7 @@ describe('Storage Service test: ', function() {
 		var stringLength = JSON.stringify(valueToBeSet).length;
 
 		storage.set('compressionTest', valueToBeSet).then(function() {
-			var browserSessionStorage = sessionStorage.getItem('intergen.compressionTest').length;
+			var browserSessionStorage = sessionStorage.getItem('angular-cache.compressionTest').length;
 			expect(browserSessionStorage).toBeLessThan(stringLength)
 			console.log('size before: ' + stringLength + ' size after:' +  browserSessionStorage);
 		});
@@ -94,7 +94,7 @@ describe('Storage Service test: ', function() {
 			a: 'blah'
 		};
 
-		sessionStorage.setItem('intergen.ses', value);
+		sessionStorage.setItem('angular-cache.ses', value);
 
 		var fromSessionStorage = storage.get('ses');
 
@@ -110,8 +110,8 @@ describe('Storage Service test: ', function() {
 	  		a: 'notblah'
 	  	};
 
-		sessionStorage.setItem('intergen.ses', JSON.stringify(valueSession));
-	  	localStorage.setItem('intergen.ses', JSON.stringify(valueLocal));
+		sessionStorage.setItem('angular-cache.ses', JSON.stringify(valueSession));
+	  	localStorage.setItem('angular-cache.ses', JSON.stringify(valueLocal));
 
 	  	var fromSessionStorage = storage.get('ses');
 
@@ -220,8 +220,8 @@ describe('Storage Service test: ', function() {
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 1);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(value);
+			expect(sessionStorage.getItem('angular-cache.item')).toBe(null);
+			expect(localStorage.getItem('angular-cache.item')).toBe(value);
 			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
 		});
 		$timeout.flush();
@@ -233,8 +233,8 @@ describe('Storage Service test: ', function() {
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 0);
-			expect(sessionStorage.getItem('intergen.item')).toBe(value);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(sessionStorage.getItem('angular-cache.item')).toBe(value);
+			expect(localStorage.getItem('angular-cache.item')).toBe(null);
 			expect(window.localStorage.removeItem).toHaveBeenCalled();
 		});
 		$timeout.flush();
@@ -247,8 +247,8 @@ describe('Storage Service test: ', function() {
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.remove('item', 2);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(sessionStorage.getItem('angular-cache.item')).toBe(null);
+			expect(localStorage.getItem('angular-cache.item')).toBe(null);
 			expect(window.localStorage.removeItem).toHaveBeenCalled();
 			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
 		});
@@ -263,8 +263,8 @@ describe('Storage Service test: ', function() {
 		storage.set('item', value).then(function() {
 			expect(storage.get('item')).toBe(value);
 			storage.removeAll(2);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
+			expect(sessionStorage.getItem('angular-cache.item')).toBe(null);
+			expect(localStorage.getItem('angular-cache.item')).toBe(null);
 			expect(window.localStorage.clear).toHaveBeenCalled();
 			expect(window.sessionStorage.clear).toHaveBeenCalled();
 			expect(storage.removeAll).toHaveBeenCalled();

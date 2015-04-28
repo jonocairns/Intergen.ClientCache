@@ -26,7 +26,7 @@ module ClientCache {
     export class ClientCacheService implements IClientCacheService {
 
         private options: IStorageOptions = {
-            storagePrefix: 'intergen',
+            storagePrefix: 'angular-cache',
             useCompression: false,
             storageType: StorageType.All
         };
