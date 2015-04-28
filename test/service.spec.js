@@ -16,7 +16,7 @@ describe('Storage Service test: ', function() {
 	});
 
 	it('should be able to set in local storage', function() {
-		var valueToBeSet = 'hello'
+		var valueToBeSet = 'hello';
 		storage.set('testKey', valueToBeSet);
 		var browserLocalStorage = localStorage.getItem('intergen.testKey');
 		expect(browserLocalStorage).toBe(valueToBeSet);

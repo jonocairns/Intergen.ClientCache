@@ -100,6 +100,10 @@ module ClientCache {
 
         public configure(options: IStorageOptions) {
             angular.extend(this.options, options);
+            if(angular.isDefined(options.storagePrefix) && options.storagePrefix !== null) {
+                this.sessionCache.destroy();
+                this.sessionCache = this.$cacheFactory(options.storagePrefix);
+            }
         }
 
         public removeAll(): void {

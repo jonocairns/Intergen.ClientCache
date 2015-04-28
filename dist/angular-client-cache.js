@@ -78,6 +78,10 @@ var ClientCache;
         };
         ClientCacheService.prototype.configure = function (options) {
             angular.extend(this.options, options);
+            if (angular.isDefined(options.storagePrefix) && options.storagePrefix !== null) {
+                this.sessionCache.destroy();
+                this.sessionCache = this.$cacheFactory(options.storagePrefix);
+            }
         };
         ClientCacheService.prototype.removeAll = function () {
             localStorage.clear();
