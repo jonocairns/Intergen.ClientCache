@@ -1,4 +1,3 @@
-/* tslint:disable:no-bitwise */
 'use strict';
 var ClientCache;
 (function (ClientCache) {
@@ -19,7 +18,6 @@ var ClientCache;
                 throw new Error('Argument null exception. Parameter name: value. Function called: set');
             key = this.prefix(key);
             var stringValue = value;
-            // Only stringify if json.
             if (angular.isObject(stringValue) || angular.isArray(stringValue) || angular.isNumber(+stringValue || stringValue)) {
                 stringValue = angular.toJson(value);
             }
@@ -69,7 +67,6 @@ var ClientCache;
                     response = objectBuilder(response);
                 return response;
             }, function () {
-                // fallback to localStorage if API call fails
                 var value = _this.get(key);
                 if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
                     value = objectBuilder(value);
@@ -133,7 +130,7 @@ var ClientCache;
         '$cacheFactory'
     ];
     angular.module('ClientCache', []);
-    angular.module('ClientCache').factory('ClientCacheService', factory);
+    angular
+        .module('ClientCache')
+        .factory('ClientCacheService', factory);
 })(ClientCache || (ClientCache = {}));
-
-//# sourceMappingURL=angular-client-cache.js.map

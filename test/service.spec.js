@@ -12,33 +12,26 @@ describe('Storage Service test: ', function() {
 	}));
 
 	afterEach(function() {
-		sessionStorage.clear();
-		localStorage.clear();
+		storage.removeAll();
 	});
 
-	it('should be able to set in local and session storage', function() {
+	it('should be able to set in local storage', function() {
 		var valueToBeSet = 'hello'
-		storage.set('testKey', valueToBeSet).then(function() {
-			var browserSessionStorage = sessionStorage.getItem('intergen.testKey');
-			var browserLocalStorage = localStorage.getItem('intergen.testKey');
-			expect(browserSessionStorage).toBe(valueToBeSet);
-			expect(browserLocalStorage).toBe(valueToBeSet);
-		});
-		$timeout.flush();
+		storage.set('testKey', valueToBeSet);
+		var browserLocalStorage = localStorage.getItem('intergen.testKey');
+		expect(browserLocalStorage).toBe(valueToBeSet);
 	});
 
-	it('should perform the API call then set it to local and session storage', function() {
+	it('should perform the API call then set it to local storage', function() {
 		$httpBackend.when('GET','blah').respond({ t: 'blah'});
 		var apiCall = function() { return $http.get('blah'); }
 
 		storage.tryGetSet('key', apiCall).then(function() {
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
 			expect(localStorage.getItem('intergen.key')).toBeDefined();
 		});
-		$timeout.flush();
 	});
 
-	it('should perform the API call then set it to local and session storage and return a build object with a date', function() {
+	it('should perform the API call then set it to local storage and return a build object with a date', function() {
 		var date = new Date().toISOString();
 		$httpBackend.when('GET','blah').respond({ t: date});
 		var apiCall = function() { return $http.get('blah'); }
@@ -46,25 +39,19 @@ describe('Storage Service test: ', function() {
 
 		storage.tryGetSet('key', apiCall, builder).then(function(item) {
 			expect(item.t instanceof Date).toBeTruthy();
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
 			expect(localStorage.getItem('intergen.key')).toBeDefined();
 		});
-		$timeout.flush();
 	});
 
 	it('should pull from session storage and not perform API call', function() {
 		var callerService = { apiCall : function() { return $http.get('blah'); } };
 		spyOn(callerService, 'apiCall').and.callThrough();
 
-		storage.set('key', { t: 'as' })
-		$timeout.flush();
+		storage.set('key', { t: 'as' });
 
 		storage.tryGetSet('key', callerService.apiCall).then(function() {
-			expect(sessionStorage.getItem('intergen.key')).toBeDefined();
-			expect(localStorage.getItem('intergen.key')).toBeDefined();
 			expect(callerService.apiCall).not.toHaveBeenCalled();
 		});
-		$timeout.flush();
 	});
 
 	it('should compress the target value and set in local and session storage', function() {
@@ -78,74 +65,14 @@ describe('Storage Service test: ', function() {
 		}
 		var stringLength = JSON.stringify(valueToBeSet).length;
 
-		storage.set('compressionTest', valueToBeSet).then(function() {
-			var browserSessionStorage = sessionStorage.getItem('intergen.compressionTest').length;
-			expect(browserSessionStorage).toBeLessThan(stringLength)
-			console.log('size before: ' + stringLength + ' size after:' +  browserSessionStorage);
-		});
-		$timeout.flush();
+		storage.set('compressionTest', valueToBeSet);
+		var browserLocalStorage = localStorage.getItem('intergen.compressionTest').length;
+		expect(browserLocalStorage).toBeLessThan(stringLength)
+		console.log('size before: ' + stringLength + ' size after:' +  browserLocalStorage);
+
 		storage.configure({
 			useCompression: false
 		});
-	});
-
-	it('should get value from session storage', function() {
-		var value = {
-			a: 'blah'
-		};
-
-		sessionStorage.setItem('intergen.ses', value);
-
-		var fromSessionStorage = storage.get('ses');
-
-		expect(fromSessionStorage).not.toBe(null);
-		expect(fromSessionStorage).not.toBe(undefined);
-	});
-
-	it('should get value from storage - with session storage preference', function() {
-	  	var valueSession = {
-	  		a: 'blah'
-	  	};
-	  	var valueLocal = {
-	  		a: 'notblah'
-	  	};
-
-		sessionStorage.setItem('intergen.ses', JSON.stringify(valueSession));
-	  	localStorage.setItem('intergen.ses', JSON.stringify(valueLocal));
-
-	  	var fromSessionStorage = storage.get('ses');
-
-	  	expect(fromSessionStorage.a).toBe(valueSession.a);
-	});
-
-	it('should not set over the current value if the object going in to storage is exactly the same', function() {
-		var value = 'test';
-		spyOn(storage, 'store').and.callThrough();
-
-		storage.set('test', value);
-		$timeout.flush();
-
-		storage.set('test', value).then(function() {
-			expect(storage.store.calls.count()).toEqual(1);
-		});
-		
-		$timeout.flush();
-	});
-
-	it('should set over the current value if the object going in to storage is exactly the same', function() {
-		var value = 'test';
-		spyOn(storage, 'store').and.callThrough();
-
-		storage.set('test', value);
-		$timeout.flush();
-
-		value = 'changed';
-
-		storage.set('test', value).then(function() {
-			expect(storage.store.calls.count()).toEqual(2);
-		});
-		
-		$timeout.flush();
 	});
 
 	it('should return js objects if they are set as such', function() {
@@ -156,7 +83,6 @@ describe('Storage Service test: ', function() {
 		};
 
 		storage.set('val', obj);
-		$timeout.flush();
 
 		var after = storage.get('val');
 
@@ -168,7 +94,6 @@ describe('Storage Service test: ', function() {
 	it('should return ISO date strings', function() {
 		var date = new Date();
 		storage.set('ab', date);
-		$timeout.flush();
 
 		var val = storage.get('ab');
 
@@ -196,109 +121,37 @@ describe('Storage Service test: ', function() {
 
 	it('should have the correct config values when the configure method is called', function() {
 		var oldOptions = storage.options;
-		var prefix = 'someOtherPrefix';
+		var prefix = 'someOtherPrefix' + Math.random();
 		var useCompression = true;
-		var storageType = 1;
 
 		storage.configure({
 			storagePrefix: prefix,
-			useCompression: useCompression,
-			storageType: storageType
+			useCompression: useCompression
 		});
-		
+
 		expect(storage.options.storagePrefix).toBe(prefix);
 		expect(storage.options.useCompression).toBe(useCompression);
-		expect(storage.options.storageType).toBe(storageType);
-
-		storage.configure(oldOptions);
 	});
 
-	it('should remove value from session storage only', function() {
-		var value = 's';
-		spyOn(window.sessionStorage, 'removeItem').and.callThrough();
-
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-			storage.remove('item', 1);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(value);
-			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
-		});
-		$timeout.flush();
-	});
-
-	it('should remove value from local storage only', function() {
+	it('should remove value from local storage', function() {
 		var value = 's';
 		spyOn(window.localStorage, 'removeItem').and.callThrough();
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-			storage.remove('item', 0);
-			expect(sessionStorage.getItem('intergen.item')).toBe(value);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
-			expect(window.localStorage.removeItem).toHaveBeenCalled();
-		});
-		$timeout.flush();
-	});
-
-	it('should remove value from local and session storage', function() {
-		var value = 's';
-		spyOn(window.localStorage, 'removeItem').and.callThrough();
-		spyOn(window.sessionStorage, 'removeItem').and.callThrough();
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-			storage.remove('item', 2);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
-			expect(window.localStorage.removeItem).toHaveBeenCalled();
-			expect(window.sessionStorage.removeItem).toHaveBeenCalled();
-		});
-		$timeout.flush();
+		storage.set('item', value);
+		expect(storage.get('item')).toBe(value);
+		storage.remove('item');
+		expect(localStorage.getItem('intergen.item')).toBe(null);
+		expect(window.localStorage.removeItem).toHaveBeenCalled();
 	});
 
 	it('should clear local and session storage', function() {
 		var value = 's';
 		spyOn(window.localStorage, 'clear').and.callThrough();
-		spyOn(window.sessionStorage, 'clear').and.callThrough();
 		spyOn(storage, 'removeAll').and.callThrough();
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-			storage.removeAll(2);
-			expect(sessionStorage.getItem('intergen.item')).toBe(null);
-			expect(localStorage.getItem('intergen.item')).toBe(null);
-			expect(window.localStorage.clear).toHaveBeenCalled();
-			expect(window.sessionStorage.clear).toHaveBeenCalled();
-			expect(storage.removeAll).toHaveBeenCalled();
-		});
-		$timeout.flush();
-	});
-
-	it('should clear session storage only', function() {
-		var value = 's';
-		spyOn(window.sessionStorage, 'clear').and.callThrough();
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-		});
-		$timeout.flush();
-		storage.set('anotherItem', value).then(function() {
-			storage.removeAll(1);
-			expect(sessionStorage.length).toBe(0);
-			expect(localStorage.length).toBe(2);
-			expect(window.sessionStorage.clear).toHaveBeenCalled();
-		});
-	});
-
-	it('should clear local storage only', function() {
-		var value = 's';
-		spyOn(window.localStorage, 'clear').and.callThrough();
-		storage.set('item', value).then(function() {
-			expect(storage.get('item')).toBe(value);
-		});
-		$timeout.flush();
-		storage.set('anotherItem', value).then(function() {
-			storage.removeAll(0);
-			expect(sessionStorage.length).toBe(2);
-			expect(localStorage.length).toBe(0);
-			expect(window.localStorage.clear).toHaveBeenCalled();
-		});
+		storage.set('item', value);
+		expect(storage.get('item')).toBe(value);
+		storage.removeAll();
+		expect(localStorage.getItem('intergen.item')).toBe(null);
+		expect(window.localStorage.clear).toHaveBeenCalled();
+		expect(storage.removeAll).toHaveBeenCalled();
 	});
 });

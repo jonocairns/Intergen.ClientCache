@@ -82,7 +82,7 @@ gulp.task('test', function() {
 });
 
 var uglify = require('gulp-uglifyjs');
- 
+
 gulp.task('uglify', function() {
   gulp.src('dist/*.js')
     .pipe(uglify())

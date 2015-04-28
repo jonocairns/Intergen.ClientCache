@@ -1,0 +1,23 @@
+{
+    "version": "1.5.0-alpha",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "!./node_modules/**/*.ts",
+        "../../tools/**/*.ts"
+    ],
+    "files": [
+        "./angular-client-cache.ts",
+        "../../tools/typings/angularjs/angular.d.ts",
+        "../../tools/typings/jquery/jquery.d.ts",
+        "../../tools/typings/lz-string/lz-string.d.ts",
+        "../../tools/typings/tsd.d.ts"
+    ]
+}

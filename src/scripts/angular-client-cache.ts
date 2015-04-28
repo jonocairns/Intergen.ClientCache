@@ -3,67 +3,66 @@
 
 module ClientCache {
     export interface IClientCacheService {
-        set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
-        get<T>(key: string, storageType?: StorageType): T;
+        set(key: string, value: any): void;
+        get<T>(key: string): T;
         tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T>;
         configure(options: IStorageOptions): void;
-        remove(key: string, storageType?: StorageType): void;
-        removeAll(storageType?: StorageType): void;
+        remove(key: string): void;
+        removeAll(): void;
     }
 
     export interface IStorageOptions {
         storagePrefix?: string;
         useCompression?: boolean;
-        storageType?: StorageType;
-    }
-
-    export enum StorageType {
-        Local,
-        Session,
-        All
     }
 
     export class ClientCacheService implements IClientCacheService {
 
-        private options: IStorageOptions = {
-            storagePrefix: 'intergen',
-            useCompression: false,
-            storageType: StorageType.All
-        };
+        private options: IStorageOptions;
+        private sessionCache: ng.ICacheObject;
 
-        constructor(private $q: ng.IQService, private $timeout: ng.ITimeoutService) {
+        constructor(private $q: ng.IQService, private $cacheFactory: ng.ICacheFactoryService) {
+          this.options = {
+              storagePrefix: 'intergen',
+              useCompression: false
+          };
+          this.sessionCache = $cacheFactory(this.options.storagePrefix);
         }
 
-        public set(key: string, value: any, storageType?: StorageType): ng.IPromise<any> {
+        public set(key: string, value: any): void {
             if (angular.isUndefined(key)) throw new Error('Argument null exception. Parameter name: key. Function called: set');
             if (angular.isUndefined(value)) throw new Error('Argument null exception. Parameter name: value. Function called: set');
+            key = this.prefix(key);
 
             var stringValue = value;
-            var deffered = this.$q.defer();
 
             // Only stringify if json.
             if (angular.isObject(stringValue) || angular.isArray(stringValue) || angular.isNumber(+stringValue || stringValue)) {
                 stringValue = angular.toJson(value);
             }
 
-            this.$timeout(() => {
-                var shouldOverride = this.overrideCacheItem(key, stringValue, this.resolveStorageType(storageType));
+            this.sessionCache.put(key, stringValue);
 
-                if (shouldOverride) {
-                    if (this.options.useCompression) {
-                        stringValue = LZString.compress(stringValue);
-                    }
-                    this.store(key, stringValue, this.resolveStorageType(storageType));
+            var shouldOverride = this.overrideCacheItem(key, stringValue);
+
+            if (shouldOverride) {
+                if (this.options.useCompression) {
+                    stringValue = LZString.compress(stringValue);
                 }
-                deffered.resolve();
-            });
-            return deffered.promise;
+                localStorage.setItem(key, stringValue);
+            }
         }
 
-        public get<T>(key: string, storageType?: StorageType): T {
+        public get<T>(key: string): T {
             if (angular.isUndefined(key)) throw new Error('Argument null exception. Parameter name: key. Function called: get');
+            key = this.prefix(key);
+            var stringValue = this.sessionCache.get(key);
 
-            var stringValue = this.retrieve(key, this.resolveStorageType(storageType));
+            if (!angular.isUndefined(stringValue) && stringValue !== null) {
+                return this.parse(stringValue);
+            } else {
+                stringValue = localStorage.getItem(key);
+            }
 
             if (angular.isUndefined(stringValue) || stringValue === null) {
                 return undefined;
@@ -71,30 +70,31 @@ module ClientCache {
 
             if (this.options.useCompression) stringValue = LZString.decompress(stringValue);
 
-            var value;
-            try {
-                value = angular.fromJson(stringValue);
-            } catch (e) {
-                value = stringValue;
-            }
-
-            return value;
+            return this.parse(stringValue);
         }
 
         public tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T> {
             var deferred = this.$q.defer();
+            key = this.prefix(key);
+            var value = this.sessionCache.get(key);
 
-            var value = this.get<T>(key, StorageType.All);
             if(!angular.isUndefined(value) && value !== null) {
+                this.set(key, value);
+                value = this.parse(value);
                 if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) value = objectBuilder(value);
                 deferred.resolve(value);
                 return deferred.promise;
             }
 
             return apiCall().then((response: T) => {
-                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) response = objectBuilder(response);
                 this.set(key, response);
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) response = objectBuilder(response);
                 return response;
+            }, () => {
+                // fallback to localStorage if API call fails
+                var value = this.get(key);
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) value = objectBuilder(value);
+                return value;
             });
         }
 
@@ -102,84 +102,34 @@ module ClientCache {
             angular.extend(this.options, options);
         }
 
-        public removeAll(storageType?: StorageType): void {
-            storageType = this.resolveStorageType(storageType);
-
-            switch (storageType) {
-                case StorageType.Local:
-                    localStorage.clear();
-                    break;
-                case StorageType.Session:
-                    sessionStorage.clear();
-                    break;
-                default:
-                    sessionStorage.clear();
-                    localStorage.clear();
-            }
+        public removeAll(): void {
+            localStorage.clear();
+            this.sessionCache.removeAll();
         }
 
-        public remove(key: string, storageType?: StorageType): void {
+        public remove(key: string): void {
             key = this.prefix(key);
-            storageType = this.resolveStorageType(storageType);
-            switch (storageType) {
-                case StorageType.Local:
-                    localStorage.removeItem(key);
-                    break;
-                case StorageType.Session:
-                    sessionStorage.removeItem(key);
-                    break;
-                default:
-                    sessionStorage.removeItem(key);
-                    localStorage.removeItem(key);
-            }
+            localStorage.removeItem(key);
+            this.sessionCache.remove(key);
         }
 
-        private resolveStorageType(storageType: StorageType) {
-            return angular.isUndefined(storageType) ? this.options.storageType : storageType;
+        private parse(stringValue: string): any {
+          var value;
+          try {
+              value = angular.fromJson(stringValue);
+          } catch (e) {
+              value = stringValue;
+          }
+          return value;
         }
 
-        private overrideCacheItem(key: string, stringValue: string, storageType: StorageType) {
-            var itemExist = this.retrieve(key, storageType);
+        private overrideCacheItem(key: string, stringValue: string) {
+            var itemExist = localStorage.getItem(this.prefix(key));
             if (angular.isUndefined(itemExist) || itemExist === null) return true;
             if (this.options.useCompression) itemExist = LZString.decompress(itemExist);
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
             return origionalHash !== newHash;
-        }
-
-        private retrieve(key: string, storageType: StorageType): string {
-            key = this.prefix(key);
-
-            switch (storageType) {
-                case StorageType.Local:
-                    return localStorage.getItem(key);
-
-                case StorageType.Session:
-                    return sessionStorage.getItem(key);
-
-                default:
-                    var sessionStoreValue = sessionStorage.getItem(key);
-                    if (!angular.isUndefined(sessionStorage)) return sessionStoreValue;
-                    return localStorage.getItem(key);
-            }
-        }
-
-        private store(key: string, value: string, storageType: StorageType): void {
-            key = this.prefix(key);
-
-            switch (storageType) {
-                case StorageType.Local:
-                    localStorage.setItem(key, value);
-                    break;
-
-                case StorageType.Session:
-                    sessionStorage.setItem(key, value);
-                    break;
-
-                default:
-                    localStorage.setItem(key, value);
-                    sessionStorage.setItem(key, value);
-            }
         }
 
         private prefix(key: string) {
@@ -198,12 +148,12 @@ module ClientCache {
         }
     }
 
-    function factory($q: ng.IQService, $timeout: ng.ITimeoutService): IClientCacheService {
-        return new ClientCacheService($q, $timeout);
+    function factory($q: ng.IQService, $cacheFactory: ng.ICacheFactoryService): IClientCacheService {
+        return new ClientCacheService($q, $cacheFactory);
     }
     factory.$inject = [
         '$q',
-        '$timeout'
+        '$cacheFactory'
     ];
 
     angular.module('ClientCache', []);
