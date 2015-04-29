@@ -46,3 +46,4 @@ node_modules
 bower_components
 src/scripts/**/*.js
 src/scripts/*.js
+coverage/lcov-report
