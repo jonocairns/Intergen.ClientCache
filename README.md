@@ -17,7 +17,7 @@ Written in typescript
 
 **(1)** Grab the **npm** package
 ```bash
-$ npm install lz-string angular-client-cache --save
+$ npm install angular-client-cache --save
 ```
 or grab the **bower** package
 ```bash
