@@ -23,15 +23,15 @@ module ClientCache {
 
         constructor(private $q: ng.IQService, private $cacheFactory: ng.ICacheFactoryService) {
           this.options = {
-              storagePrefix: 'intergen',
+              storagePrefix: 'client-cache',
               useCompression: false
           };
           this.sessionCache = $cacheFactory(this.options.storagePrefix);
         }
 
         public set(key: string, value: any): void {
-            if (angular.isUndefined(key)) throw new Error('Argument null exception. Parameter name: key. Function called: set');
-            if (angular.isUndefined(value)) throw new Error('Argument null exception. Parameter name: value. Function called: set');
+            if (angular.isUndefined(key) || key === null) throw new Error('Argument null exception. Parameter name: key. Function called: set');
+            if (angular.isUndefined(value) || value === null) throw new Error('Argument null exception. Parameter name: value. Function called: set');
             key = this.prefix(key);
 
             var stringValue = value;
@@ -54,7 +54,7 @@ module ClientCache {
         }
 
         public get<T>(key: string): T {
-            if (angular.isUndefined(key)) throw new Error('Argument null exception. Parameter name: key. Function called: get');
+            if (angular.isUndefined(key) || key === null) throw new Error('Argument null exception. Parameter name: key. Function called: get');
             key = this.prefix(key);
             var stringValue = this.sessionCache.get(key);
 
@@ -85,7 +85,7 @@ module ClientCache {
                 deferred.resolve(value);
                 return deferred.promise;
             }
-
+            /* istanbul ignore next */
             return apiCall().then((response: T) => {
                 this.set(key, response);
                 if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) response = objectBuilder(response);

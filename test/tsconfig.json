@@ -10,7 +10,15 @@
     },
     "filesGlob": [
         "./**/*.ts",
-        "!./node_modules/**/*.ts"
+        "!./node_modules/**/*.ts",
+        "../tools/**/*.ts"
     ],
-    "files": []
+    "files": [
+        "./angular-client-cache.spec.ts",
+        "../tools/typings/angularjs/angular.d.ts",
+        "../tools/typings/jasmine/jasmine.d.ts",
+        "../tools/typings/jquery/jquery.d.ts",
+        "../tools/typings/lz-string/lz-string.d.ts",
+        "../tools/typings/tsd.d.ts"
+    ]
 }

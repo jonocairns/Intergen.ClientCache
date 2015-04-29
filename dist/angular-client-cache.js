@@ -7,15 +7,15 @@ var ClientCache;
             this.$q = $q;
             this.$cacheFactory = $cacheFactory;
             this.options = {
-                storagePrefix: 'intergen',
+                storagePrefix: 'client-cache',
                 useCompression: false
             };
             this.sessionCache = $cacheFactory(this.options.storagePrefix);
         }
         ClientCacheService.prototype.set = function (key, value) {
-            if (angular.isUndefined(key))
+            if (angular.isUndefined(key) || key === null)
                 throw new Error('Argument null exception. Parameter name: key. Function called: set');
-            if (angular.isUndefined(value))
+            if (angular.isUndefined(value) || value === null)
                 throw new Error('Argument null exception. Parameter name: value. Function called: set');
             key = this.prefix(key);
             var stringValue = value;
@@ -33,7 +33,7 @@ var ClientCache;
             }
         };
         ClientCacheService.prototype.get = function (key) {
-            if (angular.isUndefined(key))
+            if (angular.isUndefined(key) || key === null)
                 throw new Error('Argument null exception. Parameter name: key. Function called: get');
             key = this.prefix(key);
             var stringValue = this.sessionCache.get(key);
@@ -63,6 +63,7 @@ var ClientCache;
                 deferred.resolve(value);
                 return deferred.promise;
             }
+            /* istanbul ignore next */
             return apiCall().then(function (response) {
                 _this.set(key, response);
                 if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)

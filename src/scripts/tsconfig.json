@@ -16,6 +16,7 @@
     "files": [
         "./angular-client-cache.ts",
         "../../tools/typings/angularjs/angular.d.ts",
+        "../../tools/typings/jasmine/jasmine.d.ts",
         "../../tools/typings/jquery/jquery.d.ts",
         "../../tools/typings/lz-string/lz-string.d.ts",
         "../../tools/typings/tsd.d.ts"
