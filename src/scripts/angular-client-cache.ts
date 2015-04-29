@@ -20,7 +20,6 @@ module ClientCache {
 
         private options: IStorageOptions;
         private sessionCache: ng.ICacheObject;
-
         constructor(private $q: ng.IQService, private $cacheFactory: ng.ICacheFactoryService) {
           this.options = {
               storagePrefix: 'client-cache',
