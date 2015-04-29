@@ -29,8 +29,13 @@ module ClientCache {
         }
 
         public set(key: string, value: any): void {
-            if (angular.isUndefined(key) || key === null) throw new Error('Argument null exception. Parameter name: key. Function called: set');
-            if (angular.isUndefined(value) || value === null) throw new Error('Argument null exception. Parameter name: value. Function called: set');
+            if (angular.isUndefined(key) || key === null) {
+              throw new Error('Argument null exception. Parameter name: key. Function called: set');
+            }
+            if (angular.isUndefined(value) || value === null) {
+              throw new Error('Argument null exception. Parameter name: value. Function called: set');
+            }
+
             key = this.prefix(key);
 
             var stringValue = value;
@@ -53,7 +58,10 @@ module ClientCache {
         }
 
         public get<T>(key: string): T {
-            if (angular.isUndefined(key) || key === null) throw new Error('Argument null exception. Parameter name: key. Function called: get');
+            if (angular.isUndefined(key) || key === null) {
+              throw new Error('Argument null exception. Parameter name: key. Function called: get');
+            }
+
             key = this.prefix(key);
             var stringValue = this.sessionCache.get(key);
 
@@ -67,7 +75,9 @@ module ClientCache {
                 return undefined;
             }
 
-            if (this.options.useCompression) stringValue = LZString.decompress(stringValue);
+            if (this.options.useCompression) {
+              stringValue = LZString.decompress(stringValue);
+            }
 
             return this.parse(stringValue);
         }
@@ -80,19 +90,25 @@ module ClientCache {
             if(!angular.isUndefined(value) && value !== null) {
                 this.set(key, value);
                 value = this.parse(value);
-                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) value = objectBuilder(value);
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
+                  value = objectBuilder(value);
+                }
                 deferred.resolve(value);
                 return deferred.promise;
             }
             /* istanbul ignore next */
             return apiCall().then((response: T) => {
                 this.set(key, response);
-                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) response = objectBuilder(response);
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
+                  response = objectBuilder(response);
+                }
                 return response;
             }, () => {
                 // fallback to localStorage if API call fails
                 var value = this.get(key);
-                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) value = objectBuilder(value);
+                if(!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
+                  value = objectBuilder(value);
+                }
                 return value;
             });
         }
@@ -128,8 +144,12 @@ module ClientCache {
 
         private overrideCacheItem(key: string, stringValue: string) {
             var itemExist = localStorage.getItem(this.prefix(key));
-            if (angular.isUndefined(itemExist) || itemExist === null) return true;
-            if (this.options.useCompression) itemExist = LZString.decompress(itemExist);
+            if (angular.isUndefined(itemExist) || itemExist === null) {
+              return true;
+            }
+            if (this.options.useCompression) {
+              itemExist = LZString.decompress(itemExist);
+            }
             var origionalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
             return origionalHash !== newHash;
