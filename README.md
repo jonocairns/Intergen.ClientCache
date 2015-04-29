@@ -1,9 +1,9 @@
 # angular-client-cache
 
 [![Build Status](https://travis-ci.org/jonocairns/angular-client-cache.svg?branch=master)](https://travis-ci.org/jonocairns/angular-client-cache) [![Code Climate](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/gpa.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![Test Coverage](https://codeclimate.com/github/jonocairns/angular-client-cache/badges/coverage.svg)](https://codeclimate.com/github/jonocairns/angular-client-cache) [![NPM version](https://img.shields.io/npm/v/angular-client-cache.svg?style=flat-square)](https://npmjs.org/package/angular-client-cache) [![License](http://img.shields.io/npm/l/angular-client-cache.svg?style=flat-square)](LICENSE) [![Dependency Status](http://img.shields.io/david/jonocairns/angular-client-cache.svg?style=flat-square)](https://david-dm.org/jonocairns/angular-client-cache)
- 
 
-Local storage and session storage wrapper for angular. Also has functionality to compress items to be stored in local/session storage. 
+
+Local storage and $cacheFactory wrapper for angular. Also has functionality to compress items to be stored in local storage.
 
 Assists with the issue of low (2.5-10MB~) storage limits. Example case - had 5.12MB of localStorage data - this was compressed to 500kb.
 
@@ -19,86 +19,73 @@ Written in typescript
 ```bash
 $ npm install lz-string angular-client-cache --save
 ```
+or grab the **bower** package
+```bash
+$ bower install angular-client-cache --save
+```
+
 **(2)** Include `angular-client-cache.js` from the [dist](https://github.com/jonocairns/angular-client-cache/tree/master/dist/bin) and `lz-string.js` in your `index.html` after angular.
 
 **(3)** Add `'ClientCache'` to your main module's list of dependencies.
 
 **(4)** Inject 'ClientCacheService' and use it!
 
-Usage info: 
+Usage info:
 ```javascript
-     set(key: string, value: any, storageType?: StorageType): ng.IPromise<any>;
-     
-     get<T>(key: string, storageType?: StorageType): T;
-     
-     tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T>;
-     
-     configure(options: IStorageOptions): void;
-     
-     remove(key: string, storageType?: StorageType): void;
-     
-     removeAll(storageType?: StorageType): void;
-``` 
+      set(key: string, value: any): void;
+
+      get<T>(key: string): T;
+
+      tryGetSet<T>(key: string, apiCall: Function, objectBuilder?: Function): ng.IPromise<T>;
+
+      configure(options: IStorageOptions): void;
+
+      remove(key: string): void;
+
+      removeAll(): void;
+```
 
 Example usages:
 (note: the enum StorageType can only be used if you are using typescript - the values for pure js are Local - 0, Session - 1 and All - 2)
-````javascript    
+````javascript
     //set:
-    
+
     var value = 'storeMePlz';
     clientCache.set('key', value);
-    
-    // or 
-    
-    clientCache.set('key', value, StorageType.Session);
-    
+
     //get:
-    
+
     clientCache.get('key');
-    
-    // or
-    
-    clientCache.get('key', StorageType.Local);
-    
-    // tryGetSet - this will attempt to get the value from local/session storage, if the value doesn't exist it will perform the API call you supply - then set that response in local/session storage. You can optionally add a builder to build the object from the response.
-    
+
+    // tryGetSet - this will attempt to get the value from the $cacheFactory, if the value doesn't exist it will perform the API call you supply - then set that response in local/$cacheFactory storage. You can optionally add a builder to build the object from the response.
+
     clientCache.tryGetSet('key', $http.get('/api/blah'));
-    
+
     // or
-    
+
     var builder = function(itemToBuild) { return { something: new Date(itemToBuild.date); }};
     clientCache.tryGetSet('key', $http.get('/api/blah'), builder);
-    
+
     // configure
-    
+
     clientCache.configure({ useCompression: true });
-    
+
     // remove
-    
+
     clientCache.remove('key');
-    
-    // or
-    
-    clientCache.remove('key', StorageType.All);
-    
+
     // removeAll
-    
+
     clientCache.removeAll();
-    
-    // or 
-    
-    clientCache.removeAll(StorageType.Session);
 ```
 
+Options:
 ``` javascript
-Options: interface IStorageOptions {
-        storagePrefix?: string;
-        useCompression?: boolean; // defaulted to false
-        storageType?: StorageType; // defaulted to BOTH session and local storage
-    }
-```    
+    storagePrefix?: string;
+    useCompression?: boolean;
+```
 
-Dependencies: 
+Dependencies:
 
 LZ-string (https://github.com/pieroxy/lz-string/),
 Angular
