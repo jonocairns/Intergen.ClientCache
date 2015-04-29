@@ -57,7 +57,7 @@ Example usages:
 
     clientCache.get('key');
 
-    // tryGetSet - this will attempt to get the value from the $cacheFactory, if the value doesn't exist it will perform the API call you supply - then set that response in local/$cacheFactory storage. You can optionally add a builder to build the object from the response.
+    // tryGetSet - this will attempt to get the value from the $cacheFactory, if the value doesn't exist it will perform the API call you supply - then set that response in local/$cacheFactory storage - if the API call fails it will try get from localStorage. You can optionally add a builder to build the object from the response.
 
     clientCache.tryGetSet('key', $http.get('/api/blah'));
 
