@@ -46,7 +46,7 @@ Usage info:
 ```
 
 Example usages:
-(note: the enum StorageType can only be used if you are using typescript - the values for pure js are Local - 0, Session - 1 and All - 2)
+
 ````javascript
     //set:
 
