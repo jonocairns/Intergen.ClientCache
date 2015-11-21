@@ -1,6 +1,6 @@
 {
   "name": "angular-client-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Client side cache with compression in angular",
   "main": "/dist/bin/angular.client.cache.js",
   "directories": {
