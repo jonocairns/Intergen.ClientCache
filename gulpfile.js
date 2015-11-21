@@ -77,7 +77,7 @@ gulp.task('test', function() {
       action: 'run'
     }))
     .on('error', function(err) {
-      throw err;
+      	return;
     });
 });
 

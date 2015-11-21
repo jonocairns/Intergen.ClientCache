@@ -51,7 +51,7 @@ module ClientCache {
 
             if (shouldOverride) {
                 if (this.options.useCompression) {
-                    stringValue = LZString.compress(stringValue);
+                    stringValue = LZString.compressToUTF16(stringValue);
                 }
                 localStorage.setItem(key, stringValue);
             }
@@ -76,7 +76,7 @@ module ClientCache {
             }
 
             if (this.options.useCompression) {
-              stringValue = LZString.decompress(stringValue);
+              stringValue = LZString.decompressFromUTF16(stringValue);
             }
 
             return this.parse(stringValue);
@@ -148,11 +148,11 @@ module ClientCache {
               return true;
             }
             if (this.options.useCompression) {
-              itemExist = LZString.decompress(itemExist);
+				itemExist = LZString.decompressFromUTF16(itemExist);
             }
-            var origionalHash = this.hash(itemExist);
+            var originalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
-            return origionalHash !== newHash;
+            return originalHash !== newHash;
         }
 
         private prefix(key: string) {

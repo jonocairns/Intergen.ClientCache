@@ -13,10 +13,12 @@ var ClientCache;
             this.sessionCache = $cacheFactory(this.options.storagePrefix);
         }
         ClientCacheService.prototype.set = function (key, value) {
-            if (angular.isUndefined(key) || key === null)
+            if (angular.isUndefined(key) || key === null) {
                 throw new Error('Argument null exception. Parameter name: key. Function called: set');
-            if (angular.isUndefined(value) || value === null)
+            }
+            if (angular.isUndefined(value) || value === null) {
                 throw new Error('Argument null exception. Parameter name: value. Function called: set');
+            }
             key = this.prefix(key);
             var stringValue = value;
             // Only stringify if json.
@@ -27,14 +29,15 @@ var ClientCache;
             var shouldOverride = this.overrideCacheItem(key, stringValue);
             if (shouldOverride) {
                 if (this.options.useCompression) {
-                    stringValue = LZString.compress(stringValue);
+                    stringValue = LZString.compressToUTF16(stringValue);
                 }
                 localStorage.setItem(key, stringValue);
             }
         };
         ClientCacheService.prototype.get = function (key) {
-            if (angular.isUndefined(key) || key === null)
+            if (angular.isUndefined(key) || key === null) {
                 throw new Error('Argument null exception. Parameter name: key. Function called: get');
+            }
             key = this.prefix(key);
             var stringValue = this.sessionCache.get(key);
             if (!angular.isUndefined(stringValue) && stringValue !== null) {
@@ -46,8 +49,9 @@ var ClientCache;
             if (angular.isUndefined(stringValue) || stringValue === null) {
                 return undefined;
             }
-            if (this.options.useCompression)
-                stringValue = LZString.decompress(stringValue);
+            if (this.options.useCompression) {
+                stringValue = LZString.decompressFromUTF16(stringValue);
+            }
             return this.parse(stringValue);
         };
         ClientCacheService.prototype.tryGetSet = function (key, apiCall, objectBuilder) {
@@ -58,22 +62,25 @@ var ClientCache;
             if (!angular.isUndefined(value) && value !== null) {
                 this.set(key, value);
                 value = this.parse(value);
-                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
+                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
                     value = objectBuilder(value);
+                }
                 deferred.resolve(value);
                 return deferred.promise;
             }
             /* istanbul ignore next */
             return apiCall().then(function (response) {
                 _this.set(key, response);
-                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
+                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
                     response = objectBuilder(response);
+                }
                 return response;
             }, function () {
                 // fallback to localStorage if API call fails
                 var value = _this.get(key);
-                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null)
+                if (!angular.isUndefined(objectBuilder) && objectBuilder !== null) {
                     value = objectBuilder(value);
+                }
                 return value;
             });
         };
@@ -105,13 +112,15 @@ var ClientCache;
         };
         ClientCacheService.prototype.overrideCacheItem = function (key, stringValue) {
             var itemExist = localStorage.getItem(this.prefix(key));
-            if (angular.isUndefined(itemExist) || itemExist === null)
+            if (angular.isUndefined(itemExist) || itemExist === null) {
                 return true;
-            if (this.options.useCompression)
-                itemExist = LZString.decompress(itemExist);
-            var origionalHash = this.hash(itemExist);
+            }
+            if (this.options.useCompression) {
+                itemExist = LZString.decompressFromUTF16(itemExist);
+            }
+            var originalHash = this.hash(itemExist);
             var newHash = this.hash(stringValue);
-            return origionalHash !== newHash;
+            return originalHash !== newHash;
         };
         ClientCacheService.prototype.prefix = function (key) {
             return this.options.storagePrefix + '.' + key;
@@ -138,7 +147,9 @@ var ClientCache;
         '$cacheFactory'
     ];
     angular.module('ClientCache', []);
-    angular.module('ClientCache').factory('ClientCacheService', factory);
+    angular
+        .module('ClientCache')
+        .factory('ClientCacheService', factory);
 })(ClientCache || (ClientCache = {}));
 
 //# sourceMappingURL=angular-client-cache.js.map

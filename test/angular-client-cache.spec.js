@@ -191,7 +191,7 @@ var Tests;
         it('should not override if the hash is the same', function () {
             var key = 'testKey';
             var value = 'derp';
-            spyOn(localStorage, 'getItem').and.returnValue(LZString.compress(value));
+            spyOn(localStorage, 'getItem').and.returnValue(LZString.compressToUTF16(value));
             storage.options.useCompression = true;
             var shouldOverride = storage.overrideCacheItem(key, value);
             expect(shouldOverride).toBeFalsy();
@@ -200,7 +200,10 @@ var Tests;
         it('should override if the hash is different', function () {
             var key = 'testKey';
             var value = 'derp';
-            spyOn(localStorage, 'getItem').and.returnValue('this is different!');
+
+            var differentValue = LZString.compressToUTF16('this is different!');
+            
+            spyOn(localStorage, 'getItem').and.returnValue(differentValue);
             storage.options.useCompression = true;
             var shouldOverride = storage.overrideCacheItem(key, value);
             expect(shouldOverride).toBeTruthy();
@@ -217,13 +220,13 @@ var Tests;
             expect(item).toBeUndefined();
         });
         it('should decompress from localStorage when get is called', function () {
-            var compressedItem = LZString.compress('hello');
+            var compressedItem = LZString.compressToUTF16('hello');
             localStorage.setItem('client-cache.key', compressedItem);
             spyOn(localStorage, 'getItem').and.callThrough();
-            spyOn(LZString, 'decompress').and.callThrough();
+            spyOn(LZString, 'decompressFromUTF16').and.callThrough();
             storage.options.useCompression = true;
             var item = storage.get('key');
-            expect(LZString.decompress).toHaveBeenCalledWith(compressedItem);
+            expect(LZString.decompressFromUTF16).toHaveBeenCalledWith(compressedItem);
             storage.options.useCompression = false;
         });
     });
