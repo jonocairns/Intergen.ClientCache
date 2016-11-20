@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     rimraf = require('gulp-rimraf'),
     Config = require('./gulpfile.config'),
-	karma = require('gulp-karma');
+	karma = require('karma').Server;
 
 var config = new Config();
 
@@ -71,14 +71,10 @@ gulp.task('clean-ts', function () {
 });
 
 gulp.task('test', function() {
-   return gulp.src('./idontexist')
-    .pipe(karma({
-      configFile: 'karma.conf.js',
-      action: 'run'
-    }))
-    .on('error', function(err) {
-      	return;
-    });
+  new karma({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }).start();
 });
 
 var uglify = require('gulp-uglifyjs');
