@@ -1,5 +1,7 @@
 /* tslint:disable:no-bitwise */
 'use strict';
+// var angular: any = angular || {};
+// var LZString: any = LZString || {};
 var ClientCache;
 (function (ClientCache) {
     var ClientCacheService = (function () {
@@ -137,7 +139,7 @@ var ClientCache;
             return hash;
         };
         return ClientCacheService;
-    })();
+    }());
     ClientCache.ClientCacheService = ClientCacheService;
     function factory($q, $cacheFactory) {
         return new ClientCacheService($q, $cacheFactory);

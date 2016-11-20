@@ -30,9 +30,13 @@ gulp.task('gen-ts-refs', function () {
 /**
  * Lint all custom TypeScript files.
  */
-gulp.task('ts-lint', function () {
-    return gulp.src(config.allTypeScript).pipe(tslint()).pipe(tslint.report('prose'));
-});
+gulp.task("ts-lint", () =>
+    gulp.src("source.ts")
+        .pipe(tslint({
+            formatter: "verbose"
+        }))
+        .pipe(tslint.report())
+);
 
 /**
  * Compile TypeScript and include references to library and app .d.ts files.
@@ -46,8 +50,7 @@ gulp.task('compile-ts', function () {
                        .pipe(sourcemaps.init())
                        .pipe(tsc({
                            target: 'ES5',
-                           declarationFiles: false,
-                           noExternalResolve: true
+                           declarationFiles: false
                        }));
 
         tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
